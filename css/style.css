@@ -1,5 +1,5 @@
 body {
-  background: whitesmoke;
+  background: black;
 }
 
 img.center {
@@ -12,6 +12,7 @@ img.center {
 }
 
 h1 {
+  color: whitesmoke;
   text-align: center;
   text-transform: uppercase;
 }
