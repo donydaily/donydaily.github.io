@@ -1,0 +1,19 @@
+body {
+  background: whitesmoke;
+}
+
+img.center {
+  align-content: center;
+  width: 965px;
+  height: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+}
+
+h1 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+  
