@@ -1,238 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DONYDAILY</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Fira Code', monospace; /* Menggunakan font Fira Code */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DONYDAILY</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+    }
 
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-        }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
 
-        .album-art {
-            position: absolute;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover; /* Menjaga proporsi gambar */
-            display: none;
-            border: 2px solid; /* Garis tepi sesuai dengan mode warna */
-            animation: spin 20s linear infinite; /* Animasi berputar */
-        }
+    .album-art {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: none;
+      border: 2px solid;
+      animation: spin 20s linear infinite;
+      z-index: 2;
+    }
 
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
 
-        .info {
-            position: absolute;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, calc(50% + 110px)); /* Posisikan tepat di bawah album art */
-            text-align: center;
-        }
+    .info {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
 
-        .info h2, .info p {
-            margin: 0;
-        }
+    .playlist {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      max-height: 500px;
+      overflow-y: auto;
+      z-index: 2;
+      font-size: 0.9rem;
+    }
 
-        /* Mode terang */
-        @media (prefers-color-scheme: light) {
-            body {
-                background: #fff; /* Latar belakang putih */
-                color: #000; /* Teks hitam */
-            }
+    .playlist div {
+      margin: 5px 0;
+      cursor: pointer;
+    }
 
-            .album-art {
-                border-color: #000; /* Garis tepi hitam */
-            }
-        }
+    .playlist .active {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
 
-        /* Mode gelap */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #000; /* Latar belakang hitam */
-                color: #fff; /* Teks putih */
-            }
+    :root {
+      --accent-color: #ff1493;
+    }
 
-            .album-art {
-                border-color: #fff; /* Garis tepi putih */
-            }
-        }
+    @media (prefers-color-scheme: light) {
+      body { background: #fff; color: #000; }
+      .album-art { border-color: #000; }
+    }
 
-        :root {
-            --accent-color: #ff1493; /* Warna aksen pink */
-        }
-
-        /* Mode terang dengan warna aksen */
-        @media (prefers-color-scheme: light) {
-            :root {
-                --accent-color: #ff1493; /* Warna aksen pink untuk mode terang */
-            }
-        }
-
-        /* Mode gelap dengan warna aksen */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --accent-color: #ff1493; /* Warna aksen pink untuk mode gelap */
-            }
-        }
-    </style>
+    @media (prefers-color-scheme: dark) {
+      body { background: #000; color: #fff; }
+      .album-art { border-color: #fff; }
+    }
+  </style>
 </head>
 <body>
-    <audio id="audio1" src="audio/audio1.mp3"></audio>
-    <audio id="audio2" src="audio/audio2.mp3"></audio>
-    <audio id="audio3" src="audio/audio3.mp3"></audio>
-    <audio id="audio4" src="audio/audio4.mp3"></audio>
-    <audio id="audio5" src="audio/audio5.mp3"></audio>
-    <audio id="audio6" src="audio/audio6.mp3"></audio>
-    <audio id="audio7" src="audio/audio7.mp3"></audio>
-    <audio id="audio8" src="audio/audio8.mp3"></audio>
-    <audio id="audio9" src="audio/audio9.mp3"></audio>
-    <audio id="audio10" src="audio/audio10.mp3"></audio>
+  <div id="audioContainer"></div>
 
-    <img id="albumArt" class="album-art" src="" alt="Album Art">
+  <img id="albumArt" class="album-art" src="" alt="Album Art"/>
+  <div class="info">
+    <h2 id="trackTitle">Track Title</h2>
+    <p id="trackArtist">Track Artist</p>
+  </div>
 
-    <div class="info">
-        <h2 id="trackTitle">Track Title</h2>
-        <p id="trackArtist">Track Artist</p>
-    </div>
+  <div class="playlist" id="playlist"></div>
 
-    <canvas id="visualizer"></canvas>
+  <canvas id="visualizer"></canvas>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const audioElements = [
-                document.getElementById('audio1'),
-                document.getElementById('audio2'),
-                document.getElementById('audio3'),
-                document.getElementById('audio4'),
-                document.getElementById('audio5'),
-                document.getElementById('audio6'),
-                document.getElementById('audio7'),
-                document.getElementById('audio8'),
-                document.getElementById('audio9'),
-                document.getElementById('audio10')
-            ];
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const trackData = [
+        { title: 'Fake Happy', artist: 'Paramore', art: 'images/album1.jpg', src: 'audio/fake_happy.mp3' },
+        { title: 'Caught In The Middle', artist: 'Paramore', art: 'images/album2.jpg', src: 'audio/caught_in_the_middle.mp3' },
+        { title: 'Still Into You', artist: 'Paramore', art: 'images/album3.jpg', src: 'audio/still_into_you.mp3' },
+        { title: 'Decode', artist: 'Paramore', art: 'images/album4.jpg', src: 'audio/decode.mp3' },
+        { title: 'Misery Business', artist: 'Paramore', art: 'images/album5.jpg', src: 'audio/misery_business.mp3' },
+        { title: 'Brick By Boring Brick', artist: 'Paramore', art: 'images/album6.jpg', src: 'audio/brick_by_boring_brick.mp3' },
+        { title: 'All I Wanted', artist: 'Paramore', art: 'images/album7.jpg', src: 'audio/all_i_wanted.mp3' },
+        { title: 'Be Alone', artist: 'Paramore', art: 'images/album8.jpg', src: 'audio/be_alone.mp3' },
+        { title: 'Hallelujah', artist: 'Paramore', art: 'images/album9.jpg', src: 'audio/hallelujah.mp3' },
+        { title: 'Monster', artist: 'Paramore', art: 'images/album10.jpg', src: 'audio/monster.mp3' },
+        { title: 'Manusia Bodoh', artist: 'Ada Band', art: 'images/manusia_bodoh.png', src: 'audio/manusia_bodoh.mp3' },
+        { title: 'Surga Cinta', artist: 'Ada Band', art: 'images/surga_cinta.png', src: 'audio/surga_cinta.mp3' },
+        { title: 'Yang Terbaik Bagimu', artist: 'Ada Band', art: 'images/yang_terbaik_bagimu.png', src: 'audio/yang_terbaik_bagimu.mp3' },
+        { title: 'Sebelum Cahaya', artist: 'Letto', art: 'images/sebelum_cahaya.png', src: 'audio/sebelum_cahaya.mp3' },
+        { title: 'Ruang Rindu', artist: 'Letto', art: 'images/ruang_rindu.png', src: 'audio/ruang_rindu.mp3' },
+        { title: 'Semakin Ku Kejar Semakin Kau Jauh', artist: 'Five Minutes', art: 'images/semakin_ku_kejar_semakin_kau_jauh.png', src: 'audio/semakin_ku_kejar_semakin_kau_jauh.mp3' },
+        { title: 'Galau', artist: 'Five Minutes', art: 'images/galau.png', src: 'audio/galau.mp3' },
+        { title: 'Kehadiranmu', artist: 'Vagetoz', art: 'images/kehadiranmu.png', src: 'audio/kehadiranmu.mp3' },
+        { title: 'Main Hati', artist: 'Andra And The BackBone', art: 'images/main_hati.png', src: 'audio/main_hati.mp3' },
+        { title: 'Masih Ada', artist: 'Ello', art: 'images/masih_ada.png', src: 'audio/masih_ada.mp3' }
 
-            const tracks = [
-                { title: 'Fake Happy', artist: 'Paramore', art: 'images/album1.jpg' },
-                { title: 'Caught in the Middle', artist: 'Paramore', art: 'images/album2.jpg' },
-                { title: 'Still into You', artist: 'Paramore', art: 'images/album3.jpg' },
-                { title: 'Decode', artist: 'Paramore', art: 'images/album4.jpg' },
-                { title: 'Misery Business', artist: 'Paramore', art: 'images/album5.jpg' },
-                { title: 'All I Wanted', artist: 'Paramore', art: 'images/album6.jpg' },
-                { title: 'Brick by Boring Brick', artist: 'Paramore', art: 'images/album7.jpg' },
-                { title: 'Be Alone', artist: 'Paramore', art: 'images/album8.jpg' },
-                { title: 'Hallelujah', artist: 'Paramore', art: 'images/album9.jpg' },
-                { title: 'Monster', artist: 'Paramore', art: 'images/album10.jpg' }
-            ];
+      ];
 
-            const canvas = document.getElementById('visualizer');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+      const canvas = document.getElementById('visualizer');
+      const ctx = canvas.getContext('2d');
+      const albumArt = document.getElementById('albumArt');
+      const titleEl = document.getElementById('trackTitle');
+      const artistEl = document.getElementById('trackArtist');
+      const playlist = document.getElementById('playlist');
 
-            let audioIndex = 0;
-            let isPlaying = false;
+      let currentIndex = 0;
+      let audio = new Audio();
+      let sourceNode = null;
 
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            analyser.fftSize = 256;
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
 
-            function updateTrackInfo() {
-                const trackTitle = document.getElementById('trackTitle');
-                const trackArtist = document.getElementById('trackArtist');
-                const track = tracks[audioIndex];
-                trackTitle.textContent = track.title;
-                trackArtist.textContent = track.artist;
-            }
+      function loadTrack(index) {
+        if (sourceNode) sourceNode.disconnect();
+        if (!audio.paused) audio.pause();
 
-            function playNextAudio() {
-                if (audioIndex < audioElements.length) {
-                    const source = audioContext.createMediaElementSource(audioElements[audioIndex]);
-                    source.connect(analyser);
-                    analyser.connect(audioContext.destination);
+        currentIndex = index;
+        audio.src = trackData[index].src;
+        audio.load();
+        sourceNode = audioContext.createMediaElementSource(audio);
+        sourceNode.connect(analyser);
+        analyser.connect(audioContext.destination);
 
-                    const albumArt = document.getElementById('albumArt');
-                    albumArt.src = tracks[audioIndex].art;
-                    albumArt.style.display = 'block';
+        albumArt.src = trackData[index].art;
+        albumArt.style.display = 'block';
+        titleEl.textContent = trackData[index].title;
+        artistEl.textContent = trackData[index].artist;
 
-                    updateTrackInfo();
+        updatePlaylist();
+        audioContext.resume();
+        audio.play();
+      }
 
-                    audioElements[audioIndex].play();
-                    isPlaying = true;
-
-                    audioElements[audioIndex].addEventListener('ended', () => {
-                        albumArt.style.display = 'none';
-                        audioIndex++;
-                        if (audioIndex >= audioElements.length) {
-                            audioIndex = 0; // Kembali ke trek pertama
-                        }
-                        playNextAudio();
-                    });
-                }
-            }
-
-            function draw() {
-                requestAnimationFrame(draw);
-
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-                analyser.getByteFrequencyData(dataArray);
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const barWidth = (canvas.width / bufferLength) * 1.5;
-                let barHeight;
-                let x = 0;
-                const radius = barWidth / 2;
-
-                const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
-
-                for (let i = 0; i < bufferLength; i++) {
-                    barHeight = dataArray[i] / 2;
-
-                    ctx.fillStyle = accentColor;
-
-                    // Gambar ujung bulat tanpa bayangan
-                    ctx.beginPath();
-                    ctx.moveTo(x + radius, canvas.height - barHeight);
-                    ctx.arc(x + radius, canvas.height - barHeight - radius, radius, Math.PI, 2 * Math.PI);
-                    ctx.lineTo(x + barWidth, canvas.height);
-                    ctx.lineTo(x, canvas.height);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    x += barWidth + 1;
-                }
-            }
-
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-
-            playNextAudio();
-            draw();
+      function updatePlaylist() {
+        playlist.innerHTML = '';
+        trackData.forEach((track, i) => {
+          const div = document.createElement('div');
+          div.textContent = `${track.title} - ${track.artist}`;
+          if (i === currentIndex) div.classList.add('active');
+          div.addEventListener('click', () => {
+            loadTrack(i);
+          });
+          playlist.appendChild(div);
         });
-    </script>
+      }
+
+      function drawVisualizer() {
+        requestAnimationFrame(drawVisualizer);
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const barWidth = (canvas.width / bufferLength) * 1.5;
+        const radius = barWidth / 2;
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = dataArray[i] / 2;
+          ctx.fillStyle = accentColor;
+          ctx.beginPath();
+          ctx.moveTo(x + radius, canvas.height - barHeight);
+          ctx.arc(x + radius, canvas.height - barHeight - radius, radius, Math.PI, 2 * Math.PI);
+          ctx.lineTo(x + barWidth, canvas.height);
+          ctx.lineTo(x, canvas.height);
+          ctx.closePath();
+          ctx.fill();
+          x += barWidth + 1;
+        }
+      }
+
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      loadTrack(currentIndex);
+      drawVisualizer();
+    });
+  </script>
 </body>
 </html>
