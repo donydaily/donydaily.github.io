@@ -87,6 +87,20 @@
       body { background: #000; color: #fff; }
       .album-art { border-color: #fff; }
     }
+
+    .loopToggle {
+      background: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 5px 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .loopToggle.active {
+      background-color: var(--accent-color);
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -98,6 +112,7 @@
     <p id="trackArtist">Track Artist</p>
   </div>
 
+  <button id="loopToggle">Loop : ON</button>
   <div class="playlist" id="playlist"></div>
 
   <canvas id="visualizer"></canvas>
@@ -133,6 +148,7 @@
       const titleEl = document.getElementById('trackTitle');
       const artistEl = document.getElementById('trackArtist');
       const playlist = document.getElementById('playlist');
+      const loopToggle = document.getElementById('loopToggle');
 
       let currentIndex = 0;
       let audio = new Audio();
@@ -217,6 +233,12 @@
           x += barWidth + 1;
         }
       }
+
+      loopToggle.addEventListener('click', () => {
+        isLooping = !isLooping;
+        loopToggle.textContent = isLooping ? '🔁 Loop: ON' : '🔁 Loop: OFF';
+        loopToggle.classList.toggle('active', isLooping);
+      });
 
       audio.addEventListener('ended', () => {
         if (currentIndex < trackData.length - 1) {
