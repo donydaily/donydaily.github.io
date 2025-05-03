@@ -88,16 +88,22 @@
       .album-art { border-color: #fff; }
     }
 
-    #loopToggle {
+    .loopToggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
       background: transparent;
       color: var(--accent-color);
       border: 1px solid var(--accent-color);
       padding: 5px 10px;
       cursor: pointer;
-      margin: 10px;
+      border-radius: 8px;
+      z-index: 2;
     }
 
-    #loopToggle.active {
+    .loopToggle.active {
       background-color: var(--accent-color);
       color: #000;
     }
@@ -112,7 +118,7 @@
     <p id="trackArtist">Track Artist</p>
   </div>
 
-  <button id="loopToggle">🔁 Loop: ON</button>
+  <button id="loopToggle">Loop : ON</button>
   <div class="playlist" id="playlist"></div>
 
   <canvas id="visualizer"></canvas>
@@ -236,7 +242,7 @@
 
       loopToggle.addEventListener('click', () => {
         isLooping = !isLooping;
-        loopToggle.textContent = isLooping ? '🔁 Loop: ON' : '🔁 Loop: OFF';
+        loopToggle.textContent = isLooping ? 'Loop : ON' : 'Loop : OFF';
         loopToggle.classList.toggle('active', isLooping);
       });
 
