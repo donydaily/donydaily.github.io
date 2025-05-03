@@ -34,8 +34,12 @@
       object-fit: cover;
       display: none;
       border: 2px solid;
-      animation: spin 20s linear infinite;
+      transition: transform 0.5.s; /* Transisi halus */
       z-index: 2;
+    }
+
+    .album-art.playing {
+      animation: spin 20s linear infinite; /* Berputar hanya saat diputar */
     }
 
     @keyframes spin {
@@ -137,6 +141,7 @@
       let currentIndex = 0;
       let audio = new Audio();
       let sourceNode = null;
+      let rotation = 0;  // Menyimpan rotasi terakhir
 
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
@@ -160,6 +165,14 @@
 
         updatePlaylist();
         audioContext.resume();
+
+        if (audio.paused) {
+          albumArt.classList.remove('playing');
+          albumArt.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`; // Terapkan rotasi terakhir
+        } else {
+          albumArt.classList.add('playing');
+        }
+
         audio.play();
       }
 
@@ -222,8 +235,17 @@
         loadTrack(currentIndex);
       });
 
-      audio.addEventListener('play', updatePlaylist);
-      audio.addEventListener('pause', updatePlaylist);
+      audio.addEventListener('play', () => {
+        albumArt.classList.add('playing');
+        updatePlaylist();
+      });
+
+      audio.addEventListener('pause', () => {
+        albumArt.classList.remove('playing');
+        rotation = (rotation + 0) % 360;  // Simpan rotasi terakhir saat pause
+        albumArt.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;  // Terapkan rotasi terakhir
+        updatePlaylist();
+      });
 
       window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
