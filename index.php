@@ -1,8 +1,11 @@
+<?php
+$tracksJson = file_get_contents('tracks.json');
+$tracks = json_decode($tracksJson, true);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DONYDAILY</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap"/>
   <style>
@@ -13,7 +16,6 @@
       background: #000;
       color: #fff;
     }
-
     canvas {
       position: absolute;
       top: 0;
@@ -22,7 +24,6 @@
       height: 100%;
       z-index: 0;
     }
-
     .album-art {
       position: absolute;
       top: 35%;
@@ -37,12 +38,10 @@
       animation: spin 20s linear infinite;
       z-index: 2;
     }
-
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
-
     .info {
       position: absolute;
       top: 65%;
@@ -51,7 +50,6 @@
       text-align: center;
       z-index: 2;
     }
-
     .playlist {
       position: absolute;
       top: 10px;
@@ -63,26 +61,21 @@
       z-index: 2;
       font-size: 0.9rem;
     }
-
     .playlist div {
       margin: 5px 0;
       cursor: pointer;
     }
-
     .playlist .active {
       color: var(--accent-color);
       font-weight: bold;
     }
-
     :root {
       --accent-color: #ff1493;
     }
-
     @media (prefers-color-scheme: light) {
       body { background: #fff; color: #000; }
       .album-art { border-color: #000; }
     }
-
     @media (prefers-color-scheme: dark) {
       body { background: #000; color: #fff; }
       .album-art { border-color: #fff; }
@@ -91,43 +84,18 @@
 </head>
 <body>
   <div id="audioContainer"></div>
-
   <img id="albumArt" class="album-art" src="" alt="Album Art"/>
   <div class="info">
     <h2 id="trackTitle">Track Title</h2>
     <p id="trackArtist">Track Artist</p>
   </div>
-
   <div class="playlist" id="playlist"></div>
-
   <canvas id="visualizer"></canvas>
 
   <script>
+    const trackData = <?php echo json_encode($tracks, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+
     document.addEventListener('DOMContentLoaded', () => {
-      const trackData = [
-        { title: 'Fake Happy', artist: 'Paramore', art: 'images/album1.jpg', src: 'audio/fake_happy.mp3' },
-        { title: 'Caught In The Middle', artist: 'Paramore', art: 'images/album2.jpg', src: 'audio/caught_in_the_middle.mp3' },
-        { title: 'Still Into You', artist: 'Paramore', art: 'images/album3.jpg', src: 'audio/still_into_you.mp3' },
-        { title: 'Decode', artist: 'Paramore', art: 'images/album4.jpg', src: 'audio/decode.mp3' },
-        { title: 'Misery Business', artist: 'Paramore', art: 'images/album5.jpg', src: 'audio/misery_business.mp3' },
-        { title: 'Brick By Boring Brick', artist: 'Paramore', art: 'images/album6.jpg', src: 'audio/brick_by_boring_brick.mp3' },
-        { title: 'All I Wanted', artist: 'Paramore', art: 'images/album7.jpg', src: 'audio/all_i_wanted.mp3' },
-        { title: 'Be Alone', artist: 'Paramore', art: 'images/album8.jpg', src: 'audio/be_alone.mp3' },
-        { title: 'Hallelujah', artist: 'Paramore', art: 'images/album9.jpg', src: 'audio/hallelujah.mp3' },
-        { title: 'Monster', artist: 'Paramore', art: 'images/album10.jpg', src: 'audio/monster.mp3' },
-        { title: 'Manusia Bodoh', artist: 'Ada Band', art: 'images/manusia_bodoh.png', src: 'audio/manusia_bodoh.mp3' },
-        { title: 'Surga Cinta', artist: 'Ada Band', art: 'images/surga_cinta.png', src: 'audio/surga_cinta.mp3' },
-        { title: 'Yang Terbaik Bagimu', artist: 'Ada Band', art: 'images/yang_terbaik_bagimu.png', src: 'audio/yang_terbaik_bagimu.mp3' },
-        { title: 'Sebelum Cahaya', artist: 'Letto', art: 'images/sebelum_cahaya.png', src: 'audio/sebelum_cahaya.mp3' },
-        { title: 'Ruang Rindu', artist: 'Letto', art: 'images/ruang_rindu.png', src: 'audio/ruang_rindu.mp3' },
-        { title: 'Semakin Ku Kejar Semakin Kau Jauh', artist: 'Five Minutes', art: 'images/semakin_ku_kejar_semakin_kau_jauh.png', src: 'audio/semakin_ku_kejar_semakin_kau_jauh.mp3' },
-        { title: 'Galau', artist: 'Five Minutes', art: 'images/galau.png', src: 'audio/galau.mp3' },
-        { title: 'Kehadiranmu', artist: 'Vagetoz', art: 'images/kehadiranmu.png', src: 'audio/kehadiranmu.mp3' },
-        { title: 'Main Hati', artist: 'Andra And The BackBone', art: 'images/main_hati.png', src: 'audio/main_hati.mp3' },
-        { title: 'Masih Ada', artist: 'Ello', art: 'images/masih_ada.png', src: 'audio/masih_ada.mp3' }
-
-      ];
-
       const canvas = document.getElementById('visualizer');
       const ctx = canvas.getContext('2d');
       const albumArt = document.getElementById('albumArt');
@@ -212,6 +180,10 @@
       canvas.height = window.innerHeight;
       loadTrack(currentIndex);
       drawVisualizer();
+
+      audio.addEventListener('ended', () => {
+        currentIndex = (currentIndex + 1) % trackData.length;
+        loadTrack(currentIndex);
     });
   </script>
 </body>
