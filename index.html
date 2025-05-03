@@ -54,7 +54,7 @@
 
     .playlist {
       position: absolute;
-      top: 10px;
+      top: 70px;
       left: 10px;
       background: rgba(0, 0, 0, 0.5);
       padding: 10px;
@@ -87,6 +87,20 @@
       body { background: #000; color: #fff; }
       .album-art { border-color: #fff; }
     }
+
+    #loopToggle {
+      background: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 5px 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #loopToggle.active {
+      background-color: var(--accent-color);
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -98,6 +112,7 @@
     <p id="trackArtist">Track Artist</p>
   </div>
 
+  <button id="loopToggle">Loop : OFF</button>
   <div class="playlist" id="playlist"></div>
 
   <canvas id="visualizer"></canvas>
@@ -125,7 +140,6 @@
         { title: 'Kehadiranmu', artist: 'Vagetoz', art: 'images/kehadiranmu.png', src: 'audio/kehadiranmu.mp3' },
         { title: 'Main Hati', artist: 'Andra And The BackBone', art: 'images/main_hati.png', src: 'audio/main_hati.mp3' },
         { title: 'Masih Ada', artist: 'Ello', art: 'images/masih_ada.png', src: 'audio/masih_ada.mp3' }
-
       ];
 
       const canvas = document.getElementById('visualizer');
@@ -134,10 +148,12 @@
       const titleEl = document.getElementById('trackTitle');
       const artistEl = document.getElementById('trackArtist');
       const playlist = document.getElementById('playlist');
+      const loopToggle = document.getElementById('loopToggle');
 
       let currentIndex = 0;
       let audio = new Audio();
       let sourceNode = null;
+      let isLooping = false;
 
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
@@ -168,11 +184,26 @@
         playlist.innerHTML = '';
         trackData.forEach((track, i) => {
           const div = document.createElement('div');
-          div.textContent = `${track.title} - ${track.artist}`;
-          if (i === currentIndex) div.classList.add('active');
+          let icon = '';
+          if (i === currentIndex) {
+            icon = audio.paused ? '▶︎' : '⏸';
+            div.classList.add('active');
+          }
+          div.innerHTML = `${icon} ${track.title} - ${track.artist}`;
+
           div.addEventListener('click', () => {
-            loadTrack(i);
+            if (i === currentIndex) {
+              if (audio.paused) {
+                audio.play();
+              } else {
+                audio.pause();
+              }
+              updatePlaylist();
+            } else {
+              loadTrack(i);
+            }
           });
+
           playlist.appendChild(div);
         });
       }
@@ -203,6 +234,27 @@
         }
       }
 
+      loopToggle.addEventListener('click', () => {
+        isLooping = !isLooping;
+        loopToggle.textContent = isLooping ? 'Loop : ON' : 'Loop : OFF';
+        loopToggle.classList.toggle('active', isLooping);
+      });
+
+      audio.addEventListener('ended', () => {
+        if (currentIndex < trackData.length - 1) {
+          currentIndex++;
+          loadTrack(currentIndex);
+        } else if (isLooping) {
+          currentIndex = 0;
+          loadTrack(currentIndex);
+        } else {
+          updatePlaylist();
+        }
+      });
+
+      audio.addEventListener('play', updatePlaylist);
+      audio.addEventListener('pause', updatePlaylist);
+
       window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -212,11 +264,6 @@
       canvas.height = window.innerHeight;
       loadTrack(currentIndex);
       drawVisualizer();
-
-      audio.addEventListener('ended', () => {
-        currentIndex = (currentIndex + 1) % trackData.length;
-        loadTrack(currentIndex);
-      });
     });
   </script>
 </body>
