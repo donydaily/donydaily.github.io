@@ -212,6 +212,11 @@
       canvas.height = window.innerHeight;
       loadTrack(currentIndex);
       drawVisualizer();
+
+      audio.addEventListener('ended', () => {
+        currentIndex = (currentIndex + 1) % trackData.length;
+        loadTrack(currentIndex);
+      });
     });
   </script>
 </body>
