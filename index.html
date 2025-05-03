@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DONYDAILY</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -78,17 +80,6 @@
       --accent-color: #ff1493;
     }
 
-    .button {
-      cursor: pointer;
-      font-size: 2rem;
-      color: var(--accent-color);
-      margin: 10px;
-    }
-
-    .active {
-      color: #00ff00;
-    }
-
     @media (prefers-color-scheme: light) {
       body { background: #fff; color: #000; }
       .album-art { border-color: #000; }
@@ -97,6 +88,10 @@
     @media (prefers-color-scheme: dark) {
       body { background: #000; color: #fff; }
       .album-art { border-color: #fff; }
+    }
+
+    #loopButton.active svg {
+      color: var(--accent-color);
     }
   </style>
 </head>
@@ -113,11 +108,12 @@
 
   <canvas id="visualizer"></canvas>
 
-  <div id="loopButton" class="button">
-    <svg id="loopIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10l4-4m0 0l-4-4m4 4H3m4 4l-4 4m0 0l4 4m-4-4h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10" />
-    </svg>
-    <span id="loopText">Loop: OFF</span>
+  <div style="text-align: center; margin-top: 10px;">
+    <button id="loopButton" title="Loop" style="background: none; border: none; cursor: pointer; color: white;">
+      <svg id="loopIcon" xmlns="http://www.w3.org/2000/svg" height="32" width="32" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17 1l4 4-4 4V6H9a4 4 0 0 0 0 8h1v2H9a6 6 0 1 1 0-12h8V1zm-2 17h-8v-3l-4 4 4 4v-3h8a4 4 0 0 0 0-8h-1v-2h1a6 6 0 1 1 0 12z"/>
+      </svg>
+    </button>
   </div>
 
   <script>
@@ -152,13 +148,11 @@
       const artistEl = document.getElementById('trackArtist');
       const playlist = document.getElementById('playlist');
       const loopButton = document.getElementById('loopButton');
-      const loopIcon = document.getElementById('loopIcon');
-      const loopText = document.getElementById('loopText');
 
       let currentIndex = 0;
       let audio = new Audio();
       let sourceNode = null;
-      let isLooping = false;
+      let isLooping = true;  // Set Looping
 
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
@@ -166,16 +160,7 @@
 
       loopButton.addEventListener('click', () => {
         isLooping = !isLooping;
-
-        if (isLooping) {
-          loopButton.classList.add('active');
-          loopIcon.style.fill = '#ff1493'; // Set color to accent color
-          loopText.textContent = 'Loop: ON';
-        } else {
-          loopButton.classList.remove('active');
-          loopIcon.style.fill = ''; // Reset color to default
-          loopText.textContent = 'Loop: OFF';
-        }
+        loopButton.classList.toggle('active', isLooping);
       });
 
       function loadTrack(index) {
@@ -255,6 +240,8 @@
         } else if (isLooping) {
           currentIndex = 0;
           loadTrack(currentIndex);
+        } else {
+          updatePlaylist();
         }
       });
     });
