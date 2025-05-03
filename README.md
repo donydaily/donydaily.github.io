@@ -1,1 +1,1 @@
-![Screenshot_20240807-192611_Chrome](https://github.com/user-attachments/assets/e265f3ba-aeea-4d90-b522-28fb0e8a99e5)
+![Screenshot from 2025-05-03 13-04-00](https://github.com/user-attachments/assets/0b878e93-dce8-4aa0-bf58-a10df702f007)
