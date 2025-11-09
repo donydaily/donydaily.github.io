@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     { title: 'Kehadiranmu', artist: 'Vagetoz', art: 'images/kehadiranmu.png', src: 'audio/kehadiranmu.mp3' },
     { title: 'Main Hati', artist: 'Andra And The BackBone', art: 'images/main_hati.png', src: 'audio/main_hati.mp3' },
     { title: 'Masih Ada', artist: 'Ello', art: 'images/masih_ada.png', src: 'audio/masih_ada.mp3' },
-    { title: 'Supernatural', artist: 'Ariana Grande', art: 'images/supernatural.png', src: 'audio/supernatural.mp3' }
+    { title: 'Supernatural', artist: 'Ariana Grande', art: 'images/supernatural.png', src: 'audio/supernatural.mp3' },
+    { title: 'Happier', artist: 'Olivia Rodrigo', art: 'images/happier.png', src: 'audio/happier.mp3' },
+    { title: '2002', artist: 'Anne Marie', art: 'images/2002.png', src: 'audio/2002.mp3' },
+    { title: 'Head Above Water', artist: 'Avril Lavigne', art: 'images/head_above_water.png', src: 'audio/head_above_water.mp3' },
+    { title: 'Bite Me', artist: 'Avril Lavigne', art: 'images/bite_me.png', src: 'audio/bite_me.mp3' },
+    { title: 'APT.', artist: 'ROSÉ & Bruno Mars', art: 'images/apt..png', src: 'audio/apt..mp3' }
   ];
 
   const canvas = document.getElementById('visualizer');
