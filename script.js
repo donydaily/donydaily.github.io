@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     { title: 'Kehadiranmu', artist: 'Vagetoz', art: 'images/kehadiranmu.png', src: 'audio/kehadiranmu.mp3' },
     { title: 'Main Hati', artist: 'Andra And The BackBone', art: 'images/main_hati.png', src: 'audio/main_hati.mp3' },
     { title: 'Masih Ada', artist: 'Ello', art: 'images/masih_ada.png', src: 'audio/masih_ada.mp3' },
+    { title: 'Satu-satu', artist: 'Idgitaf', art: 'images/satu_satu.png', src: 'audio/satu_satu.mp3' },
+    { title: 'Sedia Aku Sebelum Hujan', artist: 'Idgitaf', art: 'images/sedia_aku_sebelum_hujan.png', src: 'audio/sedia_aku_sebelum_hujan.mp3' },
     { title: 'Supernatural', artist: 'Ariana Grande', art: 'images/supernatural.png', src: 'audio/supernatural.mp3' },
     { title: 'Happier', artist: 'Olivia Rodrigo', art: 'images/happier.png', src: 'audio/happier.mp3' },
     { title: '2002', artist: 'Anne Marie', art: 'images/2002.png', src: 'audio/2002.mp3' },
