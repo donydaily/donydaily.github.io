@@ -1,92 +1,508 @@
-body {
-  margin: 0;
-  font-family: 'Fira Code', monospace;
-  overflow: hidden;
-  background: #000;
-  color: #fff;
+:root {
+    --bg-color: #0b0f17;
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --card-border: rgba(255, 255, 255, 0.07);
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #818cf8;
 }
 
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 1rem;
+    overflow-x: hidden;
+}
+
+/* Container Utama (Dibuat Transparan / Frameless) */
+.profile-container {
+    background: transparent; /* Background dihilangkan */
+    border: none;             /* Border dihilangkan */
+    backdrop-filter: none;   /* Blur dihilangkan */
+    -webkit-backdrop-filter: none;
+    box-shadow: none;        /* Bayangan dihilangkan */
+    padding: 1rem 0;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Header Avatar Profil */
+.avatar-wrapper {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 1.25rem;
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--card-border);
+    padding: 4px;
+}
+
+.status-dot {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background-color: #10b981;
+    border: 3px solid var(--bg-color);
+    border-radius: 50%;
+}
+
+h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(to right, #ffffff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.username {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+/* Bio & Typing Effect */
+.bio-container {
+    min-height: 48px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bio-typing {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.cursor {
+    color: var(--accent);
+    animation: blink 0.7s infinite;
+    font-weight: bold;
+}
+
+/* Music Player Widget */
+.music-player {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+}
+
+.player-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .album-art {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: none;
-  border: 2px solid;
-  transition: transform 0.5s;
-  z-index: 2;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--card-border);
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    animation: spinDisc 8s linear infinite;
+    animation-play-state: paused;
 }
 
 .album-art.playing {
-  animation: spin 20s linear infinite;
+    animation-play-state: running;
 }
 
-@keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes spinDisc {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-.info {
-  position: absolute;
-  top: 65%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 2;
+.player-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
 }
 
-.playlist {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  max-height: 500px;
-  overflow-y: auto;
-  z-index: 2;
-  font-size: 0.9rem;
-  -ms-overflow-style: none; /* untuk Internet Explorer dan Edge lama */
-  scrollbar-width: none;    /* untuk Firefox */
+.track-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
 }
 
-.playlist div {
-  margin: 5px 0;
-  cursor: pointer;
+.track-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.playlist .active {
-  color: var(--accent-color);
-  font-weight: bold;
+.track-artist {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.playlist::-webkit-scrollbar {
-  display: none;
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.1rem;
 }
 
-:root {
-  --accent-color: #ff1493;
+.ctrl-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  body { background: #fff; color: #000; }
-  .album-art { border-color: #000; }
+.ctrl-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-  body { background: #000; color: #fff; }
-  .album-art { border-color: #fff; }
+.play-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+.play-btn:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.1s linear;
+}
+
+.playlist-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.playlist-container.active {
+    max-height: 160px;
+    overflow-y: auto;
+    margin-top: 0.3rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--card-border);
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.playlist-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--card-border);
+}
+
+.playlist-item.active {
+    background: rgba(129, 140, 248, 0.1);
+    border-color: var(--accent);
+}
+
+.playlist-item-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-align: left;
+}
+
+.playlist-item-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item-artist {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item.active .playlist-item-title {
+    color: var(--accent);
+}
+
+/* Links & Buttons Layout */
+.links-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.repo-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.btn-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.btn-link i:first-child {
+    font-size: 1.2rem;
+    width: 25px;
+    text-align: left;
+}
+
+.btn-link-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.arrow {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+
+.repo-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    margin-top: 0;
+}
+
+.repo-container.active {
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 0.25rem 0.25rem 0.25rem 0;
+    margin-top: 0.5rem;
+}
+
+.repo-item {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text-main);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.repo-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--accent);
+    transform: translateX(4px);
+}
+
+.repo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.repo-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.repo-stars {
+    font-size: 0.75rem;
+    color: #eab308;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.repo-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.loading-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.tags-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-main);
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsif Media Queries */
+@media screen and (max-width: 480px) {
+    body { padding: 1rem 0.75rem; }
+    .profile-container { padding: 1rem 0.25rem; }
+    .avatar-wrapper { width: 95px; height: 95px; margin-bottom: 1rem; }
+    h1 { font-size: 1.5rem; }
+    .username { font-size: 0.85rem; margin-bottom: 1rem; }
+    .bio-typing { font-size: 0.88rem; }
+    .music-player { padding: 0.85rem 0.95rem; }
+    .album-art { width: 48px; height: 48px; }
+    .track-title { font-size: 0.82rem; }
+    .track-artist { font-size: 0.7rem; }
+    .btn-link { padding: 0.85rem 1rem; font-size: 0.9rem; }
+    .btn-link i:first-child { font-size: 1.1rem; }
+}
+
+@media screen and (min-width: 768px) {
+    .profile-container { max-width: 500px; padding: 1.5rem 0; }
+    .btn-link:hover { background: rgba(255, 255, 255, 0.06); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+}

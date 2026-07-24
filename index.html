@@ -1,26 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DONYDAILY</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap"/>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DONYDAILY</title>
+    
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Link ke File CSS External -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="audioContainer"></div>
 
-  <img id="albumArt" class="album-art" src="" alt="Album Art"/>
-  <div class="info">
-    <h2 id="trackTitle">Track Title</h2>
-    <p id="trackArtist">Track Artist</p>
-  </div>
+    <div class="profile-container">
+        <!-- Header Profil -->
+        <div class="avatar-wrapper">
+            <img id="user-avatar" src="" alt="Avatar" class="avatar">
+            <div class="status-dot"></div>
+        </div>
 
-  <div class="playlist" id="playlist"></div>
+        <h1 id="profile-name">Fajar Romadoni</h1>
+        <span id="profile-username" class="username">@donydaily</span>
+        
+        <!-- Bio Typing Effect -->
+        <div class="bio-container">
+            <p class="bio-typing">
+                <span id="typing-text"></span><span class="cursor">|</span>
+            </p>
+        </div>
 
-  <canvas id="visualizer"></canvas>
+        <!-- Mini Playlist Music Player -->
+        <div class="music-player">
+            <div class="player-main">
+                <img id="album-art" class="album-art" src="" alt="Album Art">
+                
+                <div class="player-details">
+                    <div class="track-text">
+                        <span id="audio-title" class="track-title">Loading track...</span>
+                        <span id="audio-artist" class="track-artist">Artist</span>
+                    </div>
+                    
+                    <div class="player-controls">
+                        <button id="prev-btn" class="ctrl-btn" title="Lagu Sebelumnya"><i class="fas fa-step-backward"></i></button>
+                        <button id="play-btn" class="play-btn" title="Play/Pause"><i id="play-icon" class="fas fa-play"></i></button>
+                        <button id="next-btn" class="ctrl-btn" title="Lagu Selanjutnya"><i class="fas fa-step-forward"></i></button>
+                        <button id="playlist-btn" class="ctrl-btn" title="Daftar Lagu"><i class="fas fa-list-ul"></i></button>
+                    </div>
+                </div>
+            </div>
 
-  <script src="script.js" defer></script>
+            <div id="progress-container" class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div id="playlist-container" class="playlist-container"></div>
+            
+            <audio id="audio-player" preload="metadata"></audio>
+        </div>
+
+        <!-- Links -->
+        <div class="links-flex">
+            <!-- Group GitHub Repo Dropdown -->
+            <div class="repo-group">
+                <div class="btn-link" id="repo-btn">
+                    <div class="btn-link-content">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub Repositories</span>
+                    </div>
+                    <i class="fas fa-chevron-down arrow" id="repo-arrow"></i>
+                </div>
+                
+                <div id="repo-container" class="repo-container"></div>
+            </div>
+
+            <a href="https://t.me/donydaily" target="_blank" class="btn-link">
+                <div class="btn-link-content">
+                    <i class="fab fa-telegram"></i>
+                    <span>Telegram Channel</span>
+                </div>
+                <i class="fas fa-chevron-right arrow"></i>
+            </a>
+
+            <a href="mailto:emailmu@domain.com" class="btn-link">
+                <div class="btn-link-content">
+                    <i class="fas fa-envelope"></i>
+                    <span>Hubungi Saya</span>
+                </div>
+                <i class="fas fa-chevron-right arrow"></i>
+            </a>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="tags-title">Current Tech Stack</div>
+        <div class="tags-container">
+            <span class="tag">Linux</span>
+            <span class="tag">Python</span>
+            <span class="tag">HTML/CSS</span>
+            <span class="tag">Git</span>
+            <span class="tag">Bash</span>
+            <span class="tag">Php</span>
+        </div>
+    </div>
+
+    <!-- Link ke File JS External -->
+    <script src="script.js"></script>
 </body>
 </html>
-
