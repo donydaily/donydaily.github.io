@@ -506,3 +506,15 @@ h1 {
     .profile-container { max-width: 500px; padding: 1.5rem 0; }
     .btn-link:hover { background: rgba(255, 255, 255, 0.06); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
 }
+
+/* Copyright Footer Styling */
+.footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 0px solid var(--card-border);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+}
+

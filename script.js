@@ -322,6 +322,8 @@ function typeEffect() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+	document.getElementById('year').innerText = new Date().getFullYear();
+	
     setTimeout(typeEffect, 1000);
 
     let playPromise = audioPlayer.play();
