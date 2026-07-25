@@ -354,23 +354,23 @@ repoBtn.addEventListener('click', async () => {
     repoArrow.style.transform = repoContainer.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
 
     if (!isFetched) {
-        repoContainer.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Memuat repositori...</div>';
+        repoContainer.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Loading repository...</div>';
         try {
             const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=30`);
             if (!response.ok) throw new Error();
             const repos = await response.json();
             repoContainer.innerHTML = '';
-            if (repos.length === 0) { repoContainer.innerHTML = '<div class="loading-text">Tidak ada repositori publik.</div>'; return; }
+            if (repos.length === 0) { repoContainer.innerHTML = '<div class="loading-text">There are no public repositories.</div>'; return; }
             repos.forEach(repo => {
                 const repoItem = document.createElement('a');
                 repoItem.href = repo.html_url; repoItem.target = '_blank'; repoItem.className = 'repo-item';
                 repoItem.innerHTML = `
                     <div class="repo-header"><span class="repo-name">${repo.name}</span><span class="repo-stars"><i class="fas fa-star"></i> ${repo.stargazers_count}</span></div>
-                    <p class="repo-desc">${repo.description || 'Tidak ada deskripsi.'}</p>
+                    <p class="repo-desc">${repo.description || 'No description.'}</p>
                 `;
                 repoContainer.appendChild(repoItem);
             });
             isFetched = true;
-        } catch { repoContainer.innerHTML = '<div class="loading-text" style="color: #ef4444;">Gagal memuat repositori.</div>'; }
+        } catch { repoContainer.innerHTML = '<div class="loading-text" style="color: #ef4444;">Failed to load the repository.</div>'; }
     }
 });
