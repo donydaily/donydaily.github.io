@@ -29,10 +29,10 @@ const PLAYLIST = [
         url: "assets/audio/be_alone.mp3"
     },
     {
-        title: "Bit Me",
+        title: "Bite Me",
         artist: "Avril Lavigne",
-        cover: "assets/images/bit_me.png",
-        url: "assets/audio/bit_me.mp3"
+        cover: "assets/images/bite_me.png",
+        url: "assets/audio/bite_me.mp3"
     },
     {
         title: "Brick by Boring Brick",
