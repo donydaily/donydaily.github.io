@@ -7,10 +7,6 @@ const TYPING_WORDS = [
     "I enjoy tweaking my desktop appearance, writing automation scripts, and exploring web technologies."
 ];
 
-// Setup Info Dasar Halaman
-// document.getElementById('user-avatar').src = `https://github.com/${GITHUB_USERNAME}.png`;
-// document.getElementById('profile-username').innerText = `@${GITHUB_USERNAME}`;
-
 // ==========================================
 // MULTIPLE TRACKS MUSIC PLAYER LOGIC
 // ==========================================
