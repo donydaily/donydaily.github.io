@@ -19,7 +19,7 @@
         <nav class="top-nav">
             <a href="#" class="nav-item active" data-target="page-home"><i class="fas fa-home"></i> Home</a>
             <a href="#" class="nav-item" data-target="page-editor"><i class="fas fa-code"></i> Editor</a>
-            <a href="https://github.com/donydaily" target="_blank" class="nav-item"><i class="fas fa-terminal"></i> Setup</a>
+            <a href="#" class="nav-item" data-target="page-music"><i class="fas fa-music"></i> Music</a>
         </nav>
         
       <!-- ================= HALAMAN 1: HOME ================= -->
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Mini Playlist Music Player -->
-        <div class="music-player">
+        <!--div class="music-player">
             <div class="player-main">
                 <img id="album-art" class="album-art" src="" alt="Album Art">
                 
@@ -64,7 +64,7 @@
             <div id="playlist-container" class="playlist-container"></div>
             
             <audio id="audio-player" preload="metadata"></audio>
-        </div>
+        </div-->
 
         <!-- Links -->
         <div class="links-flex">
@@ -81,7 +81,7 @@
                 <div id="repo-container" class="repo-container">
                     <div class="search-box-wrapper" id="search-box-wrapper" style="display: none;">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="repo-search" placeholder="Cari repositori..." autocomplete="off">
+                        <input type="text" id="repo-search" placeholder="Search repositories..." autocomplete="off">
                     </div>
                     <div id="repo-list"></div>
                 </div>
@@ -140,8 +140,42 @@
                   <span class="editor-title"><i class="fas fa-file-code"></i> scratchpad.txt</span>
                   <button id="copy-editor-btn" class="editor-btn"><i class="fas fa-copy"></i> Copy</button>
               </div>
-              <textarea id="editor-textarea" placeholder="// Ketik catatan, kuis, atau draf kode di sini... (Otomatis tersimpan)"></textarea>
+              <textarea id="editor-textarea" placeholder="// Type notes, quizzes, or code drafts here... (Automatically saved)"></textarea>
           </div>
+      </div>
+
+      <!-- ================= HALAMAN 3: MUSIC PLAYER ================= -->
+      <div id="page-music" class="page-section" style="display: none;">
+        <div class="music-card-full">
+            <div class="vinyl-wrapper">
+                <img id="full-player-cover" src="https://i.scdn.co/image/ab67616d0000b2737603c407817088f115594b2f" alt="Cover" class="vinyl-record">
+            </div>
+
+            <div class="track-details">
+                <h3 id="full-track-title">2002</h3>
+                <p id="full-track-artist">Anne Marie</p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-box">
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" value="0" min="0" max="100">
+                <span id="total-duration">0:00</span>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="player-controls">
+                <button id="prev-btn" class="ctrl-btn"><i class="fas fa-step-backward"></i></button>
+                <button id="main-play-btn" class="ctrl-btn play-btn"><i class="fas fa-play" id="main-play-icon"></i></button>
+                <button id="next-btn" class="ctrl-btn"><i class="fas fa-step-forward"></i></button>
+                <button id="playlist-toggle-btn" class="ctrl-btn" title="Playlist"><i class="fas fa-list"></i></button>
+            </div>
+
+            <!-- Playlist Drawer -->
+            <div id="playlist-container" class="playlist-container" style="display: none;">
+                <ul id="playlist-items" class="playlist-items"></ul>
+            </div>
+        </div>
       </div>
         
         <!-- Copyright Footer -->

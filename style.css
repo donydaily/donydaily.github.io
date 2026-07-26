@@ -218,8 +218,197 @@ h1 {
     font-size: 0.75rem;
 }
 
+/* Music Page Styling */
+.music-card-full {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* Vinyl Record Effect */
+.vinyl-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+
+.vinyl-record {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1a1d24;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    animation: rotateVinyl 8s linear infinite;
+    animation-play-state: paused;
+}
+
+.vinyl-record.playing {
+    animation-play-state: running;
+}
+
+@keyframes rotateVinyl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.track-details h3 {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.track-details p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Progress Bar */
+.progress-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+#progress-bar {
+    flex: 1;
+    accent-color: var(--accent);
+    cursor: pointer;
+    height: 4px;
+}
+
+/* Player Controls */
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.ctrl-btn {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ctrl-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.05);
+}
+
+.ctrl-btn.play-btn {
+    width: 52px;
+    height: 52px;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    font-size: 1.1rem;
+}
+
+.ctrl-btn.play-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
+}
+
+/* Playlist Drawer Styling */
+.playlist-container {
+    width: 100%;
+    margin-top: 1rem;
+    border-top: 1px solid var(--card-border);
+    padding-top: 1rem;
+    max-height: 220px;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Custom Scrollbar untuk Playlist */
+.playlist-container::-webkit-scrollbar {
+    width: 4px;
+}
+.playlist-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.playlist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.playlist-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--card-border);
+}
+
+.playlist-item.active {
+    border-color: var(--accent);
+    background: rgba(129, 140, 248, 0.12);
+}
+
+.playlist-item img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.playlist-item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.playlist-item-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.playlist-item-artist {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
 /* Music Player Widget */
-.music-player {
+/*.music-player {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--card-border);
     border-radius: 18px;
@@ -425,7 +614,7 @@ h1 {
 
 .playlist-item.active .playlist-item-title {
     color: var(--accent);
-}
+} */
 
 /* Links & Buttons Layout */
 .links-flex {
