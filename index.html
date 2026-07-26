@@ -15,20 +15,26 @@
 <body>
 
     <div class="profile-container">
-        <!-- Header Profil -->
-        <div class="avatar-wrapper">
-            <img id="user-avatar" src="" alt="Avatar" class="avatar">
-            <div class="status-dot"></div>
-        </div>
-
-        <h1 id="profile-name">Fajar Romadoni</h1>
-        <span id="profile-username" class="username">@donydaily</span>
+        <!-- Top Floating Pill Navbar -->
+        <nav class="top-nav">
+            <a href="#" class="nav-item active" data-target="page-home"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="nav-item" data-target="page-editor"><i class="fas fa-code"></i> Editor</a>
+            <a href="https://github.com/donydaily" target="_blank" class="nav-item"><i class="fas fa-terminal"></i> Setup</a>
+        </nav>
         
+      <!-- ================= HALAMAN 1: HOME ================= -->
+      <div id="page-home" class="page-section active">
         <!-- Bio Typing Effect -->
         <div class="bio-container">
             <p class="bio-typing">
                 <span id="typing-text"></span><span class="cursor">|</span>
             </p>
+        </div>
+        
+        <!-- Live Clock Widget -->
+        <div class="clock-widget">
+            <i class="fas fa-clock"></i>
+            <span id="live-clock">--:--:-- WIB</span>
         </div>
 
         <!-- Mini Playlist Music Player -->
@@ -72,9 +78,15 @@
                     <i class="fas fa-chevron-down arrow" id="repo-arrow"></i>
                 </div>
                 
-                <div id="repo-container" class="repo-container"></div>
+                <div id="repo-container" class="repo-container">
+                    <div class="search-box-wrapper" id="search-box-wrapper" style="display: none;">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="repo-search" placeholder="Cari repositori..." autocomplete="off">
+                    </div>
+                    <div id="repo-list"></div>
+                </div>
             </div>
-
+            
             <a href="https://t.me/donydaily" target="_blank" class="btn-link">
                 <div class="btn-link-content">
                     <i class="fab fa-telegram"></i>
@@ -90,8 +102,26 @@
                 </div>
                 <i class="fas fa-chevron-right arrow"></i>
             </a>
+            <!-- Baris Ikon Media Sosial -->
+            <div class="social-links">
+                <a href="https://github.com/donydaily" target="_blank" class="social-icon" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://t.me/donydaily" target="_blank" class="social-icon" title="Telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://x.com/from_a_doni" target="_blank" class="social-icon" title="X (Twitter)">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com/from_a_doni" target="_blank" class="social-icon" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://facebook.com/fromdonii" target="_blank" class="social-icon" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                </a>
+            </div>
         </div>
-
+        
         <!-- Tech Stack -->
         <div class="tags-title">Current Tech Stack</div>
         <div class="tags-container">
@@ -101,6 +131,18 @@
             <span class="tag">Bash</span>
             <span class="tag">Php</span>
         </div>
+      </div>
+        
+      <!-- ================= HALAMAN 2: TEXT EDITOR ================= -->
+      <div id="page-editor" class="page-section" style="display: none;">
+          <div class="editor-wrapper">
+              <div class="editor-header">
+                  <span class="editor-title"><i class="fas fa-file-code"></i> scratchpad.txt</span>
+                  <button id="copy-editor-btn" class="editor-btn"><i class="fas fa-copy"></i> Copy</button>
+              </div>
+              <textarea id="editor-textarea" placeholder="// Ketik catatan, kuis, atau draf kode di sini... (Otomatis tersimpan)"></textarea>
+          </div>
+      </div>
         
         <!-- Copyright Footer -->
         <footer class="footer">

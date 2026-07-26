@@ -191,8 +191,8 @@ const TYPING_WORDS = [
 ];
 
 // Setup Info Dasar Halaman
-document.getElementById('user-avatar').src = `https://github.com/${GITHUB_USERNAME}.png`;
-document.getElementById('profile-username').innerText = `@${GITHUB_USERNAME}`;
+// document.getElementById('user-avatar').src = `https://github.com/${GITHUB_USERNAME}.png`;
+// document.getElementById('profile-username').innerText = `@${GITHUB_USERNAME}`;
 
 // ==========================================
 // 1. MUSIC PLAYER & PLAYLIST LOGIC
@@ -343,36 +343,214 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ==========================================
-// 3. GITHUB API REPOSITORIES FETCH
+// // ==========================================
+// 3. GITHUB API REPOSITORIES FETCH & SEARCH
 // ==========================================
 const repoBtn = document.getElementById('repo-btn');
 const repoContainer = document.getElementById('repo-container');
 const repoArrow = document.getElementById('repo-arrow');
-let isFetched = false;
+const searchBoxWrapper = document.getElementById('search-box-wrapper');
+const repoSearch = document.getElementById('repo-search');
+const repoList = document.getElementById('repo-list');
 
+let isFetched = false;
+let fetchedRepos = []; // Menyimpan data repositori asli dari API
+
+// Fungsi Render List Repositori
+function renderRepos(repos) {
+    repoList.innerHTML = '';
+    if (repos.length === 0) {
+        repoList.innerHTML = '<div class="loading-text">Tidak ada repositori ditemukan.</div>';
+        return;
+    }
+    repos.forEach(repo => {
+        const repoItem = document.createElement('a');
+        repoItem.href = repo.html_url;
+        repoItem.target = '_blank';
+        repoItem.className = 'repo-item';
+        repoItem.innerHTML = `
+            <div class="repo-header">
+                <span class="repo-name">${repo.name}</span>
+                <span class="repo-stars"><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
+            </div>
+            <p class="repo-desc">${repo.description || 'Tidak ada deskripsi.'}</p>
+        `;
+        repoList.appendChild(repoItem);
+    });
+}
+
+// Fetch Repositori saat Dropdown Diklik
 repoBtn.addEventListener('click', async () => {
     repoContainer.classList.toggle('active');
     repoArrow.style.transform = repoContainer.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
 
     if (!isFetched) {
-        repoContainer.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Loading repository...</div>';
+        repoList.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Memuat repositori...</div>';
         try {
             const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=30`);
             if (!response.ok) throw new Error();
-            const repos = await response.json();
-            repoContainer.innerHTML = '';
-            if (repos.length === 0) { repoContainer.innerHTML = '<div class="loading-text">There are no public repositories.</div>'; return; }
-            repos.forEach(repo => {
-                const repoItem = document.createElement('a');
-                repoItem.href = repo.html_url; repoItem.target = '_blank'; repoItem.className = 'repo-item';
-                repoItem.innerHTML = `
-                    <div class="repo-header"><span class="repo-name">${repo.name}</span><span class="repo-stars"><i class="fas fa-star"></i> ${repo.stargazers_count}</span></div>
-                    <p class="repo-desc">${repo.description || 'No description.'}</p>
-                `;
-                repoContainer.appendChild(repoItem);
-            });
+            fetchedRepos = await response.json();
+            
+            if (fetchedRepos.length === 0) {
+                repoList.innerHTML = '<div class="loading-text">Tidak ada repositori publik.</div>';
+            } else {
+                searchBoxWrapper.style.display = 'flex'; // Tampilkan search bar
+                renderRepos(fetchedRepos);
+            }
             isFetched = true;
-        } catch { repoContainer.innerHTML = '<div class="loading-text" style="color: #ef4444;">Failed to load the repository.</div>'; }
+        } catch {
+            repoList.innerHTML = '<div class="loading-text" style="color: #ef4444;">Gagal memuat repositori.</div>';
+        }
     }
 });
+
+// Real-Time Filter / Search Logic
+repoSearch.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const filteredRepos = fetchedRepos.filter(repo => 
+        repo.name.toLowerCase().includes(query) || 
+        (repo.description && repo.description.toLowerCase().includes(query))
+    );
+    renderRepos(filteredRepos);
+});
+
+// ==========================================
+// 4. LIVE CLOCK LOGIC
+// ==========================================
+function updateClock() {
+    const now = new Date();
+    const options = {
+        timeZone: 'Asia/Jakarta', // Zona waktu WIB
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    };
+    const timeString = new Intl.DateTimeFormat('en-GB', options).format(now);
+    const clockElement = document.getElementById('live-clock');
+    if (clockElement) {
+        clockElement.innerText = `${timeString} WIB`;
+    }
+}
+
+// Jalankan fungsi jam setiap 1 detik
+setInterval(updateClock, 1000);
+updateClock(); // Panggil sekali di awal agar tidak ada jeda detik pertama
+
+// ==========================================
+// 5. PAGE SWITCHING LOGIC (SPA)
+// ==========================================
+const navItems = document.querySelectorAll('.nav-item[data-target]');
+const pageSections = document.querySelectorAll('.page-section');
+
+navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = item.getAttribute('data-target');
+
+        // Ganti status tombol navbar
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+
+        // Tampilkan halaman sesuai target
+        pageSections.forEach(section => {
+            if (section.id === targetId) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    });
+});
+
+// ==========================================
+// 6. SCRATCHPAD / TEXT EDITOR LOGIC
+// ==========================================
+const editorTextarea = document.getElementById('editor-textarea');
+const copyEditorBtn = document.getElementById('copy-editor-btn');
+
+if (editorTextarea) {
+    // Muat catatan yang pernah diketik dari LocalStorage
+    editorTextarea.value = localStorage.getItem('scratchpad_note') || '';
+
+    // Otomatis simpan setiap kali ada perubahan teks
+    editorTextarea.addEventListener('input', () => {
+        localStorage.setItem('scratchpad_note', editorTextarea.value);
+    });
+}
+
+if (copyEditorBtn && editorTextarea) {
+    // Salin teks ke clipboard
+    copyEditorBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(editorTextarea.value).then(() => {
+            const originalHTML = copyEditorBtn.innerHTML;
+            copyEditorBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                copyEditorBtn.innerHTML = originalHTML;
+            }, 2000);
+        });
+    });
+}
+
+// ==========================================
+// 7. MECHANICAL KEYBOARD SOUND (ALWAYS ACTIVE)
+// ==========================================
+let audioCtx = null;
+
+// Fungsi Sintesis Suara Klik Keyboard Mekanikal
+function playKeyClick() {
+    // Inisialisasi AudioContext saat interaksi pertama pengunjung
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    // 1. Buat Noise Buffer (Klik Tactile)
+    const bufferSize = audioCtx.sampleRate * 0.012; // Durasi 12ms
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    // 2. Filter Frekuensi (Karakter Switch Mekanikal)
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1700 + Math.random() * 300; // Pitch acak
+    filter.Q.value = 3.5;
+
+    // 3. Amplifier Envelope (Volume & Decay)
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.50, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.012);
+
+    // Hubungkan Audio Nodes
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    noise.start();
+}
+
+// Pasang Efek Suara pada Semua Tombol Navigasi & Sosmed
+document.querySelectorAll('.nav-item, .btn-link, .social-icon, .editor-btn').forEach(element => {
+    element.addEventListener('click', () => {
+        playKeyClick();
+    });
+});
+
+// Pasang Efek Suara Saat Mengetik di Text Editor
+const editorArea = document.getElementById('editor-textarea');
+if (editorArea) {
+    editorArea.addEventListener('keydown', (e) => {
+        if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(e.key)) {
+            playKeyClick();
+        }
+    });
+}
+
