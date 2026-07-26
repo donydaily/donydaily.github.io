@@ -580,78 +580,78 @@ if (editorArea) {
 }
 
 // ==========================================
-// 8. TOUCH SWIPE NAVIGATION (SWIPE RIGHT / LEFT)
+// 8. SWIPE & DRAG NAVIGATION (MOBILE & DESKTOP)
 // ==========================================
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
+let startX = 0;
+let startY = 0;
+let isDragging = false;
 
-// Daftar ID halaman sesuai urutan tab navbar
 const pageOrder = ['page-home', 'page-editor', 'page-music'];
-const minSwipeDistance = 50; // Jarak minimal usapan jari (piksel)
+const minSwipeDistance = 40; // Jarak minimal geser dalam piksel
 
-// Ambil indeks halaman yang sedang aktif saat ini
+// Ambil indeks halaman yang sedang tampil secara akurat (mengecek display !== 'none')
 function getCurrentPageIndex() {
-    const activeSection = document.querySelector('.page-section[style*="display: block"], .page-section.active');
-    if (!activeSection) return 0;
-    const index = pageOrder.indexOf(activeSection.id);
-    return index !== -1 ? index : 0;
+    for (let i = 0; i < pageOrder.length; i++) {
+        const pageEl = document.getElementById(pageOrder[i]);
+        if (pageEl && window.getComputedStyle(pageEl).display !== 'none') {
+            return i;
+        }
+    }
+    return 0;
 }
 
-// Fungsi pindah ke halaman berdasarkan indeks
+// Fungsi pindah halaman berdasarkan indeks
 function switchPageByIndex(index) {
     if (index >= 0 && index < pageOrder.length) {
         const targetId = pageOrder[index];
         const targetNavBtn = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (targetNavBtn) {
-            targetNavBtn.click(); // Memicu klik tombol navbar (otomatis memutar suara klik jika aktif)
+            targetNavBtn.click();
         }
     }
 }
 
-// Tangkap posisi awal sentuhan jari
-document.addEventListener('touchstart', (e) => {
-    // Abaikan gestur jika pengguna sedang menggeser slider lagu atau mengetik di editor
-    if (e.target.closest('#progress-bar') || e.target.closest('#editor-textarea')) {
-        touchStartX = 0;
-        touchStartY = 0;
+// Tangkap Mulai Sentuh Jari / Klik Tahan Mouse (Pointer Down)
+document.addEventListener('pointerdown', (e) => {
+    // Abaikan jika pengguna sedang berinteraksi dengan elemen input / tombol / navbar
+    if (
+        e.target.closest('#progress-bar') || 
+        e.target.closest('#editor-textarea') || 
+        e.target.closest('.top-nav') ||
+        e.target.closest('button') ||
+        e.target.closest('input')
+    ) {
+        isDragging = false;
         return;
     }
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-}, { passive: true });
 
-// Tangkap posisi akhir saat sentuhan dilepas
-document.addEventListener('touchend', (e) => {
-    if (touchStartX === 0) return; // Jika sentuhan diawali dari slider/editor, abaikan
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+});
 
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
+// Tangkap Lepas Sentuhan / Mouse (Pointer Up)
+document.addEventListener('pointerup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
 
-    handleSwipe();
-}, { passive: true });
+    const endX = e.clientX;
+    const endY = e.clientY;
 
-// Logika penentuan arah swipe
-function handleSwipe() {
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
 
-    // Pastikan gerakan dominan horizontal (bukan scroll halaman ke atas/bawah)
+    // Pastikan gerakan dominan mendatar (Horizontal)
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= minSwipeDistance) {
         const currentIndex = getCurrentPageIndex();
 
         if (deltaX < 0) {
-            // Swipe ke Kiri 👈 -> Pindah ke Tab Selanjutnya (Home -> Editor -> Music)
+            // Geser ke Kiri 👈 -> Halaman Selanjutnya (Home -> Editor -> Music)
             switchPageByIndex(currentIndex + 1);
         } else {
-            // Swipe ke Kanan 👉 -> Pindah ke Tab Sebelumnya (Music -> Editor -> Home)
+            // Geser ke Kanan 👉 -> Halaman Sebelumnya (Music -> Editor -> Home)
             switchPageByIndex(currentIndex - 1);
         }
     }
-
-    // Reset koordinat
-    touchStartX = 0;
-    touchStartY = 0;
-}
+});
 
