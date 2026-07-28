@@ -60,12 +60,6 @@ const playlist = [
         src: "assets/audio/decode.mp3"
     },
     {
-        title: "Dunia Tipu-Tipu",
-        artist: "Yura Yunita",
-        cover: "assets/images/dunia_tipu_tipu.png",
-        src: "assets/audio/dunia_tipu_tipu.m4a"
-    },
-    {
         title: "Fake Happy",
         artist: "Paramore",
         cover: "assets/images/fake_happy.jpg",
